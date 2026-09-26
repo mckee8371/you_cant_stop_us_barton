@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Developer Admin | 67 UNBLOCKED GAMES</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 24px; background: #000; color: #eee;
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; }
+    .nav { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-bottom: 28px; }
+    button {
+      border: 1px solid #333; border-radius: 8px; padding: 10px 16px;
+      color: #eee; background: #111; cursor: pointer; font-weight: 700;
+    }
+    button:hover { background: #fff; color: #000; }
+    h1 { text-align: center; margin: 12px 0 6px; }
+    .intro { text-align: center; color: #888; margin: 0 0 28px; }
+    .status { min-height: 22px; text-align: center; color: #6ee7a0; margin: 12px 0; }
+    .status.error { color: #ff7777; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 18px; }
+    .card {
+      background: #0b0b0b; border: 1px solid #242424; border-radius: 12px;
+      padding: 20px; box-shadow: 0 8px 30px rgba(0,0,0,.22);
+    }
+    .card h2 { margin: 0 0 6px; font-size: 18px; }
+    .card p, .muted { color: #888; font-size: 13px; }
+    label { display: block; color: #aaa; font-size: 12px; margin: 14px 0 6px; text-transform: uppercase; letter-spacing: .06em; }
+    textarea, input {
+      width: 100%; border: 1px solid #333; border-radius: 8px; background: #111;
+      color: #eee; padding: 11px; font: inherit; outline: none;
+    }
+    textarea { min-height: 96px; resize: vertical; }
+    textarea:focus, input:focus { border-color: #777; }
+    .save { margin-top: 12px; border-color: #286b42; background: #102318; color: #8ff0b0; }
+    .danger { border-color: #713333; background: #210d0d; color: #ff9999; }
+    .row { display: flex; gap: 8px; align-items: center; }
+    .row input { flex: 1; }
+    .list { margin-top: 14px; display: grid; gap: 7px; }
+    .list-item {
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+      border: 1px solid #222; border-radius: 7px; padding: 9px 11px; color: #ccc;
+    }
+    .list-item button { padding: 5px 9px; font-size: 11px; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 9px; border-bottom: 1px solid #222; vertical-align: top; }
+    th { color: #888; font-size: 11px; text-transform: uppercase; }
+    td { color: #ccc; }
+    .wide { grid-column: 1 / -1; }
+    .empty { color: #666; padding: 12px 0; }
+    @media (max-width: 600px) { body { padding: 14px; } .row { align-items: stretch; flex-direction: column; } }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <nav class="nav">
+      <button onclick="location.href='index.html'">Home</button>
+      <button onclick="location.href='chat.html'">Chat</button>
+      <button onclick="location.href='games.html'">Games</button>
+      <button onclick="location.href='credits.html'">Credits</button>
+      <button onclick="logout()">Log out</button>
+    </nav>
+
+    <h1>Developer Admin</h1>
+    <p class="intro">Staff-only controls for announcements, chat, staff accounts, reports, and rooms.</p>
+    <div id="status" class="status"></div>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Site announcement</h2>
+        <p>This message appears in the banner across the site.</p>
+        <label for="announcement">Announcement</label>
+        <textarea id="announcement" maxlength="300"></textarea>
+        <button class="save" onclick="saveSetting('announcement')">Save announcement</button>
+      </article>
+
+      <article class="card">
+        <h2>Critical notice</h2>
+        <p>This opens as an important notice for visitors. Leave it empty to clear it.</p>
+        <label for="notice">Notice</label>
+        <textarea id="notice" maxlength="500"></textarea>
+        <button class="save" onclick="saveNotice()">Save notice</button>
+      </article>
+
+      <article class="card">
+        <h2>Chat MOTD</h2>
+        <p>Shown above the chat login and lobby.</p>
+        <label for="chat_motd">Message of the day</label>
+        <textarea id="chat_motd" maxlength="300"></textarea>
+        <button class="save" onclick="saveSetting('chat_motd')">Save chat MOTD</button>
+      </article>
+
+      <article class="card">
+        <h2>Chat rules</h2>
+        <p>Visitors can open these rules from the chat page.</p>
+        <label for="chat_rules">Rules</label>
+        <textarea id="chat_rules" maxlength="5000"></textarea>
+        <button class="save" onclick="saveSetting('chat_rules')">Save chat rules</button>
+      </article>
+
+      <article class="card">
+        <h2>Staff accounts</h2>
+        <p>Only staff accounts can open this admin page or use staff moderation tools.</p>
+        <div class="row">
+          <input id="staffUsername" placeholder="Username to add">
+          <button onclick="assignStaff()">Add staff</button>
+        </div>
+        <div id="staffList" class="list"></div>
+      </article>
+
+      <article class="card">
+        <h2>Quick actions</h2>
+        <p>Existing chat moderation tools are also available here for convenience.</p>
+        <button onclick="loadAll()">Refresh data</button>
+        <button onclick="location.href='chat.html'">Open chat controls</button>
+        <p class="muted">Room owners and staff can moderate live rooms. Staff can resolve reports and remove rooms or accounts below.</p>
+      </article>
+
+      <article class="card wide">
+        <h2>Room reports</h2>
+        <div id="roomReports" class="table-wrap"></div>
+      </article>
+
+      <article class="card wide">
+        <h2>User reports</h2>
+        <div id="userReports" class="table-wrap"></div>
+      </article>
+
+      <article class="card wide">
+        <h2>All rooms</h2>
+        <div id="allRooms" class="table-wrap"></div>
+      </article>
+    </section>
+  </main>
+  <script src="admin.js"></script>
+</body>
+</html>

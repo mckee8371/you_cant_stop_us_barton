@@ -1,0 +1,418 @@
+<body>
+  <style>
+  body {
+      background-color: #000;
+      color: #fff;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 20px;
+      line-height: 1.5;
+      text-align: center;
+  }
+  h1, h2, h3, h4 {
+      color: #fff;
+      margin: 10px 0;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+  }
+  h1 { font-size: 2.5rem; }
+  h2 { font-size: 1.8rem; }
+  h3 { font-size: 1.2rem; color: #888; }
+  p { color: #aaa; }
+  button {
+      background-color: #111;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 12px 24px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      font-size: 14px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 5px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      outline: none;
+  }
+  button:hover {
+      background-color: #fff;
+      color: #000;
+      border-color: #fff;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(255, 255, 255, 0.1);
+  }
+  button:active { transform: translateY(0); }
+  hr {
+      border: 0;
+      border-top: 1px solid #222;
+      margin: 30px auto;
+      width: 100%;
+  }
+  .nav-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 30px;
+  }
+  .game-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 30px;
+      padding: 40px 0;
+      max-width: 1400px;
+      margin: 0 auto;
+  }
+  .settings-section {
+      background-color: #0a0a0a !important;
+      border: 1px solid #222 !important;
+      padding: 30px !important;
+      border-radius: 12px !important;
+      margin: 20px auto !important;
+      max-width: 600px;
+      text-align: left;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  }
+  .settings-section h2 { text-align: left; margin-bottom: 15px; }
+  .settings-section p { text-align: left; margin-bottom: 20px; }
+  .game-btn {
+      height: 180px !important;
+      width: 100% !important;
+      margin: 0 !important;
+      border: 3px solid #222 !important;
+      border-radius: 16px !important;
+      filter: grayscale(1);
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      background-color: #000;
+  }
+  .game-btn:hover {
+      filter: grayscale(0);
+      border-color: #fff !important;
+      transform: scale(1.05) translateY(-8px);
+      box-shadow: 0 20px 40px rgba(255, 255, 255, 0.2);
+      z-index: 10;
+  }
+  .discord-btn {
+      max-width: 800px;
+      margin: 20px auto;
+      font-size: 1.2rem;
+      background-color: #5865F2;
+      border: none;
+      width: 100%;
+  }
+  .discord-btn:hover { background-color: #4752c4; color: #fff; }
+  img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      margin: 20px 0;
+  }
+  </style>
+  <head>
+    <div class="nav-container">
+      <button onclick="window.location.href='index.html';">HOME</button>
+      <button onclick="window.location.href='games.html';">GAMES</button>
+      <button onclick="window.location.href='proxies.html';">PROXIES</button>
+      <button onclick="window.location.href='settings.html';">SETTINGS</button>
+      <button onclick="window.location.href='credits.html';">CREDITS</button>
+      <button onclick="window.location.href='movies.html';">MOVIES</button>
+      <button onclick="window.location.href='chat.html';">CHAT</button>
+      <button onclick="window.location.href='updates.html';">UPDATES</button>
+    </div>
+    
+    <hr>
+    <h1>Settings</h1>
+    <script src="script.js"></script>
+    <script>
+      function updateLowMemUI() {
+        var on = localStorage.getItem('lowMemory') === '1';
+        var btn = document.getElementById('lowMemBtn');
+        var status = document.getElementById('lowMemStatus');
+        btn.textContent = on ? '⚡ Low Memory: ON' : '⚡ Low Memory: OFF';
+        btn.style.backgroundColor = on ? '#28a745' : '#6c757d';
+        status.textContent = on ? 'Background animation is disabled.' : 'Background animation is enabled.';
+        var canvas = document.getElementById('particle-bg');
+        if (on && canvas) canvas.style.display = 'none';
+        if (!on && canvas) canvas.style.display = '';
+      }
+      function toggleLowMemory() {
+        var on = localStorage.getItem('lowMemory') === '1';
+        if (on) {
+          localStorage.removeItem('lowMemory');
+          var canvas = document.getElementById('particle-bg');
+          if (canvas) canvas.style.display = '';
+        } else {
+          localStorage.setItem('lowMemory', '1');
+          var canvas = document.getElementById('particle-bg');
+          if (canvas) canvas.style.display = 'none';
+        }
+        updateLowMemUI();
+      }
+      document.addEventListener('DOMContentLoaded', updateLowMemUI);
+    </script>
+
+    <div class="settings-section">
+      <h2>Data Management</h2>
+      <p>Export your game progress to a file or import a previously saved file.</p>
+      <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+        <button onclick="exportData()" style="background-color: #28a745;">Save/Export Data</button>
+        <button onclick="document.getElementById('importFile').click()" style="background-color: #007bff;">Import Data</button>
+        <input type="file" id="importFile" style="display: none;" onchange="importData(event)" accept=".json">
+      </div>
+      <p id="statusMessage" style="display: none; text-align: center; margin-top: 10px;"></p>
+    </div>
+      <h2>Some games do not support save files, like Minecraft — believe it or not.</h2>
+      <h3>We will soon provide a list of games that don't save.</h3>
+
+    <div class="settings-section">
+      <h2>Low Memory Mode</h2>
+      <p>Disables the background particle animation to reduce lag and CPU usage. Takes effect on all pages immediately.</p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;">
+        <button id="lowMemBtn" onclick="toggleLowMemory()" style="min-width:140px;font-weight:700;"></button>
+        <span id="lowMemStatus" style="font-size:13px;color:#888;"></span>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h2>Tab Cloaker</h2>
+      <p>Click a cloak to activate it. Click again to turn it off.</p>
+      <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+        <button id="cloakBtn_schoology" onclick="selectCloak('schoology')" style="background-color: #6c757d;">Schoology</button>
+        <button id="cloakBtn_iready" onclick="selectCloak('iready')" style="background-color: #6c757d;">i-Ready</button>
+        <button id="cloakBtn_ixl" onclick="selectCloak('ixl')" style="background-color: #6c757d;">IXL</button>
+        <button id="cloakBtn_clever" onclick="selectCloak('clever')" style="background-color: #6c757d;">Clever</button>
+        <button id="cloakBtn_custom" onclick="selectCloak('custom')" style="background-color: #6c757d;">⭐ Custom</button>
+      </div>
+
+      <hr style="border-color:#1a1a1a; margin: 20px 0;">
+      <h3 style="margin-bottom:12px; font-size:14px; color:#aaa; text-transform:uppercase; letter-spacing:0.05em;">Custom Cloak Builder</h3>
+      <div style="display:flex; flex-direction:column; gap:12px;">
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:13px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Tab Title</label>
+          <input id="customCloakTitle" type="text" placeholder="e.g. Google Classroom"
+            style="padding:10px 14px;border-radius:8px;border:1px solid #333;background:#111;color:#fff;font-size:14px;outline:none;width:100%;box-sizing:border-box;">
+        </div>
+        <div style="display:flex; flex-direction:column; gap:6px;">
+          <label style="font-size:13px;color:#888;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;">Tab Icon (favicon)</label>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+            <button onclick="document.getElementById('customCloakFile').click()" style="background:#111;border:1px dashed #555;min-width:120px;">📁 Upload Image</button>
+            <input type="file" id="customCloakFile" accept="image/*" style="display:none;" onchange="handleCustomCloakImage(event)">
+            <img id="customCloakPreview" src="" alt="" style="display:none;width:32px;height:32px;border-radius:6px;object-fit:contain;border:1px solid #333;background:#111;">
+            <span id="customCloakFileName" style="font-size:13px;color:#888;">No image chosen</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <button onclick="saveCustomCloak()" style="background-color:#28a745;flex:1;">Save Custom Cloak</button>
+          <button onclick="clearCustomCloak()" style="background-color:#dc3545;flex:1;">Clear Custom</button>
+        </div>
+        <div id="customCloakStatus" style="font-size:13px;color:#888;text-align:center;min-height:18px;"></div>
+      </div>
+    </div>
+
+    <script>
+      (function() {
+        var titleInput = document.getElementById('customCloakTitle');
+        var preview    = document.getElementById('customCloakPreview');
+        var fileName   = document.getElementById('customCloakFileName');
+        var statusEl   = document.getElementById('customCloakStatus');
+        var pendingIcon = null;
+
+        function loadCustomUI() {
+          var t = localStorage.getItem('customCloakTitle');
+          var i = localStorage.getItem('customCloakIcon');
+          titleInput.value = t || '';
+          if (i) {
+            pendingIcon = i;
+            preview.src = i;
+            preview.style.display = 'inline-block';
+            fileName.textContent = 'Saved icon';
+          }
+          if (t && i && localStorage.getItem('cloakType') === 'custom') {
+            statusEl.style.color = '#28a745';
+            statusEl.textContent = 'Custom cloak is active.';
+          }
+        }
+
+        window.handleCustomCloakImage = function(e) {
+          var file = e.target.files[0];
+          if (!file) return;
+          if (!file.type.startsWith('image/')) {
+            statusEl.style.color = '#dc3545';
+            statusEl.textContent = '❌ That file type is not supported. Please upload a PNG, JPG, SVG, or WebP image.';
+            return;
+          }
+          statusEl.style.color = '#888';
+          statusEl.textContent = 'Processing image…';
+          var reader = new FileReader();
+          reader.onerror = function() {
+            statusEl.style.color = '#dc3545';
+            statusEl.textContent = '❌ Could not read the file. It may be corrupted or unsupported.';
+          };
+          reader.onload = function(ev) {
+            var img = new Image();
+            img.onerror = function() {
+              statusEl.style.color = '#dc3545';
+              statusEl.textContent = '❌ Image could not be loaded. Try a PNG or JPG file instead.';
+              pendingIcon = null;
+              preview.style.display = 'none';
+              fileName.textContent = 'No image chosen';
+            };
+            img.onload = function() {
+              try {
+                var size = 64;
+                var canvas = document.createElement('canvas');
+                canvas.width = size;
+                canvas.height = size;
+                var ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, size, size);
+                var scale = Math.min(size / img.naturalWidth, size / img.naturalHeight);
+                var w = img.naturalWidth * scale;
+                var h = img.naturalHeight * scale;
+                ctx.drawImage(img, (size - w) / 2, (size - h) / 2, w, h);
+                pendingIcon = canvas.toDataURL('image/png');
+                preview.src = pendingIcon;
+                preview.style.display = 'inline-block';
+                fileName.textContent = file.name;
+                statusEl.style.color = '#28a745';
+                statusEl.textContent = '✅ Image ready — click Save to apply.';
+              } catch(err) {
+                statusEl.style.color = '#dc3545';
+                statusEl.textContent = '❌ Could not process image (may be cross-origin protected). Try a PNG or JPG.';
+              }
+            };
+            img.src = ev.target.result;
+          };
+          reader.readAsDataURL(file);
+        };
+
+        window.saveCustomCloak = function() {
+          var t = titleInput.value.trim();
+          if (!t) { statusEl.style.color='#dc3545'; statusEl.textContent='Please enter a tab title.'; return; }
+          if (!pendingIcon) { statusEl.style.color='#dc3545'; statusEl.textContent='Please upload an icon image.'; return; }
+          localStorage.setItem('customCloakTitle', t);
+          localStorage.setItem('customCloakIcon', pendingIcon);
+          statusEl.style.color = '#28a745';
+          statusEl.textContent = 'Custom cloak saved! Click "⭐ Custom" above to activate it.';
+        };
+
+        window.clearCustomCloak = function() {
+          localStorage.removeItem('customCloakTitle');
+          localStorage.removeItem('customCloakIcon');
+          if (localStorage.getItem('cloakType') === 'custom') {
+            localStorage.removeItem('cloakType');
+            if (typeof applyCloak === 'function') applyCloak(null);
+            if (typeof updateCloakButtons === 'function') updateCloakButtons();
+          }
+          titleInput.value = '';
+          pendingIcon = null;
+          preview.src = '';
+          preview.style.display = 'none';
+          fileName.textContent = 'No image chosen';
+          statusEl.style.color = '#888';
+          statusEl.textContent = 'Custom cloak cleared.';
+        };
+
+        document.addEventListener('DOMContentLoaded', loadCustomUI);
+      })();
+    </script>
+
+    <div class="settings-section">
+      <h2>🚨 Panic Key</h2>
+      <p>Press a key to instantly redirect this tab to any URL — useful for quickly switching away from the site.</p>
+      <div style="display: flex; flex-direction: column; gap: 14px;">
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 13px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Panic Key</label>
+          <input id="panicKeyInput" type="text" readonly placeholder="Click here, then press a key…"
+            style="padding: 10px 14px; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff; font-size: 15px; cursor: pointer; text-align: center; letter-spacing: 0.1em; outline: none; caret-color: transparent;">
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px;">
+          <label style="font-size: 13px; color: #888; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;">Redirect URL</label>
+          <input id="panicUrlInput" type="url" placeholder="https://google.com"
+            style="padding: 10px 14px; border-radius: 8px; border: 1px solid #333; background: #111; color: #fff; font-size: 14px; outline: none; width: 100%; box-sizing: border-box;">
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <button onclick="savePanicKey()" style="background-color: #28a745; flex: 1;">Save Panic Key</button>
+          <button onclick="clearPanicKey()" style="background-color: #dc3545; flex: 1;">Clear</button>
+        </div>
+        <div id="panicStatus" style="font-size: 13px; color: #888; text-align: center; min-height: 18px;"></div>
+      </div>
+    </div>
+
+    <script>
+      (function() {
+        var keyInput = document.getElementById('panicKeyInput');
+        var urlInput = document.getElementById('panicUrlInput');
+        var statusEl = document.getElementById('panicStatus');
+
+        function loadPanicSettings() {
+          var k = localStorage.getItem('panicKey');
+          var u = localStorage.getItem('panicUrl');
+          keyInput.value = k ? k : '';
+          urlInput.value = u ? u : '';
+          if (k && u) {
+            statusEl.style.color = '#28a745';
+            statusEl.textContent = 'Active — press "' + k + '" anywhere on the site to redirect.';
+          } else {
+            statusEl.style.color = '#888';
+            statusEl.textContent = k || u ? 'Set both a key and a URL to activate.' : '';
+          }
+        }
+
+        keyInput.addEventListener('focus', function() {
+          keyInput.style.borderColor = '#fff';
+          keyInput.value = '';
+          statusEl.style.color = '#888';
+          statusEl.textContent = 'Press any key…';
+        });
+
+        keyInput.addEventListener('blur', function() {
+          keyInput.style.borderColor = '#333';
+          if (keyInput.value) {
+            statusEl.style.color = '#888';
+            statusEl.textContent = 'Key "' + keyInput.value + '" recorded — click Save to activate.';
+          } else {
+            loadPanicSettings();
+          }
+        });
+
+        keyInput.addEventListener('keydown', function(e) {
+          e.preventDefault();
+          if (e.key === 'Escape') { keyInput.value = ''; keyInput.blur(); return; }
+          keyInput.value = e.key;
+          keyInput.blur();
+        });
+
+        window.savePanicKey = function() {
+          var k = keyInput.value.trim();
+          var u = urlInput.value.trim();
+          if (!k) { statusEl.style.color = '#dc3545'; statusEl.textContent = 'Please set a panic key first.'; return; }
+          if (!u) { statusEl.style.color = '#dc3545'; statusEl.textContent = 'Please enter a redirect URL.'; return; }
+          if (!u.startsWith('http://') && !u.startsWith('https://')) { u = 'https://' + u; urlInput.value = u; }
+          localStorage.setItem('panicKey', k);
+          localStorage.setItem('panicUrl', u);
+          loadPanicSettings();
+        };
+
+        window.clearPanicKey = function() {
+          localStorage.removeItem('panicKey');
+          localStorage.removeItem('panicUrl');
+          keyInput.value = '';
+          urlInput.value = '';
+          statusEl.style.color = '#888';
+          statusEl.textContent = 'Panic key cleared.';
+        };
+
+        document.addEventListener('DOMContentLoaded', loadPanicSettings);
+      })();
+    </script>
+
+  </head>
+<script src="gate.js"></script>
+<script src="update-popup.js"></script>
+<script src="notice.js"></script>
+<script src="announcement.js"></script>
+<script src="particles.js"></script>
+</body>
